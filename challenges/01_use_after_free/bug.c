@@ -132,7 +132,7 @@ static void dialog_on_event(Widget *self, int code) {
 }
 
 static char *app_build_status(const char *text) {
-    char *msg = malloc(sizeof(Widget));   
+    char *msg = malloc(sizeof(Widget)); // 동환 - 여긴 왜 sizeof *msg 안 했는가? 
     if (!msg) exit(1);
 
     /* [테스트용 연출] 재사용한 메모리를 0xAB 로 '일부러' 덮어써서 오염시킨다.
@@ -158,6 +158,27 @@ int main(void) {
     screen_dispatch(&s, 1);
 
     /* TODO 닫힌(closed) 위젯을 여기서 정리(free + 해당 슬롯 NULL)할 필요가 있음 */
+    for (int i = 0; i < s.count; i++) {
+        // items[2]를 배열에서 지운다. -> 이거 자체가 UAF인데? -> closed == 1이 살아있을 때 지워야 함.
+
+        
+        if (s.items[i]->closed != 0) {
+            s.items[i] = NULL;
+            
+            // 뒤의 items를 땡긴다.
+            for (int j = i + 1; i < s.count; i++) {
+                 
+                if (s.items[j] == NULL) {
+                    continue;
+                }
+
+                s.items[j-1] = s.items[j];
+                s.items[j] = NULL;
+               
+            }
+            s.count -= 1;
+        }
+    }
 
     char *status = app_build_status("dialog closed");
     printf("%s\n", status);
