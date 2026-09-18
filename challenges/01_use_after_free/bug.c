@@ -102,7 +102,7 @@ static Widget *widget_new(const VTable *vt, int id, const char *label) {
 }
 
 static void widget_destroy(Widget *w) {
-    free(w);          
+    free(w);
 }
 
 /* ── Screen ──────────────────────────────────────────────────── */
@@ -127,7 +127,7 @@ static void screen_render(Screen *s) {
 static void dialog_on_event(Widget *self, int code) {
     if (code == 1) {
         self->closed = 1;
-        widget_destroy(self);   
+        // widget_destroy(self);   
     }
 }
 
@@ -151,7 +151,13 @@ int main(void) {
     screen_add(&s, widget_new(&LABEL_VT,  10, "Welcome"));
     screen_add(&s, widget_new(&BUTTON_VT, 11, "OK"));
     screen_add(&s, widget_new(&DIALOG_VT, 12, "Are you sure?"));  /* items[2] */
-    screen_add(&s, widget_new(&BUTTON_VT, 13, "Cancel"));
+    // screen_add(&s, widget_new(&BUTTON_VT, 13, "Cancel"));
+    // screen_add(&s, widget_new(&BUTTON_VT, 13, "Cancel"));
+    // screen_add(&s, widget_new(&BUTTON_VT, 13, "Cancel"));
+    // screen_add(&s, widget_new(&BUTTON_VT, 13, "Cancel"));
+    // screen_add(&s, widget_new(&DIALOG_VT, 12, "Are you sure?"));  /* items[7] */
+
+
 
     printf("frame 1:\n");
     screen_render(&s);
@@ -162,20 +168,22 @@ int main(void) {
         // items[2]를 배열에서 지운다. -> 이거 자체가 UAF인데? -> closed == 1이 살아있을 때 지워야 함.
 
         
-        if (s.items[i]->closed != 0) {
+        if (s.items[i]->closed == 1) {
+            Widget* temp = s.items[i];
             s.items[i] = NULL;
             
             // 뒤의 items를 땡긴다.
-            for (int j = i + 1; i < s.count; i++) {
+            for (int j = i + 1; j< s.count; j++) {
                  
                 if (s.items[j] == NULL) {
                     continue;
                 }
-
+                
                 s.items[j-1] = s.items[j];
                 s.items[j] = NULL;
                
             }
+            widget_destroy(temp);
             s.count -= 1;
         }
     }
