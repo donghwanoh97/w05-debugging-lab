@@ -91,6 +91,7 @@ static Widget *widget_new(const VTable *vt, int id, const char *label) {
     *   tip 2. 그래서 sizeof *w 는 (VLA 제외) 컴파일 타임에 sizeof(Widget) 상수로 치환된다.
     *   생각해보기: sizeof(Widget) 대신 sizeof *w 로 쓰면 어떤 장점이 있을까?
     */
+    // *w 선언부에서 타입이 바뀌더라도 컴파일러에 의해 자동으로 계산된 값만큼 메모리 할당. 유지보수에 좋다.  
     Widget *w = malloc(sizeof *w);
     if (!w) { perror("malloc"); exit(1); }
     w->vtbl = vt;
