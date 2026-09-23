@@ -49,7 +49,7 @@ static void cfg_set(Config *c, const char *k, const char *v) {
 static const char *cfg_get(const Config *c, const char *k) {
     for (int i = 0; i < c->n; i++)
         if (strcmp(c->keys[i], k) == 0) return c->vals[i];
-    return NULL;                       /* 없는 키 → NULL */
+    return "";                       /* 없는 키 → NULL */
 }
 
 static void expand(const Config *c, const char *tmpl, char *out, size_t outcap) {
@@ -64,7 +64,7 @@ static void expand(const Config *c, const char *tmpl, char *out, size_t outcap) 
             memcpy(key, p + 2, kl);
             key[kl] = '\0';
 
-            const char *v = cfg_get(c, key);      
+            const char *v = cfg_get(c, key);
             size_t vl = strlen(v);                 
             if (o + vl < outcap) { memcpy(out + o, v, vl); o += vl; }
             p = end + 1;
