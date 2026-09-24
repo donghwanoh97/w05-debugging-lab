@@ -60,8 +60,21 @@ static void eb_init(EditBuffer *e) {
     if (!e->clipboard) { perror("malloc"); exit(1); }
 }
 
+
+static int* int_dup(const int* src, size_t count) {
+    if (count == 0) return NULL;
+    int *dst = malloc(count * sizeof(int));
+    if(!dst) { perror("malloc"); exit(1); }
+    memcpy(dst, src, count * sizeof(int));
+    return dst;
+}
+
 static void eb_snapshot(EditBuffer *e) {
-    if (e->undo_n < MAX_UNDO) e->undo[e->undo_n++] = e->data;
+    if (e->undo_n < MAX_UNDO) 
+    {
+        // e->undo[e->undo_n++] = e->data;
+        e->undo[e->undo_n++] = int_dup(e->data, e->len);
+    }
 }
 
 static void eb_grow(EditBuffer *e, size_t need) {
