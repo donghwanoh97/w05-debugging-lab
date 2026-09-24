@@ -50,7 +50,7 @@ static void parse_headers(char *text, Headers *h) {
         char *colon = strchr(line, ':');   
         
         char *key = line;
-        char *val = "";
+        char *val = "";        
         
         if(colon != NULL) {
             *colon = '\0';     
