@@ -75,12 +75,18 @@ static void row_print(const Row *r) {
     printf("%d fields:", r->n);
     for (int i = 0; i < r->n; i++) printf(" [%s]", r->fields[i]);
     printf("\n");
+
+    for(int i = 0; i < r->n; i++) {
+        long offset = r->fields[i] - r->base;
+        printf("fields[%d] 주소: %p (base로부터 +%ld 바이트), 값: [%s]\n", i, (void*)r->fields[i], offset, r->fields[i]);
+    }
 }
 
 static void row_free(Row *r) {
-    for (int i = 0; i < r->n; i++) {
-        free(r->fields[i]);       
-    }
+    // for (int i = 0; i < r->n; i++) {
+    //     free(r->fields[i]);       
+    // }
+    free(r->base);
     r->n = 0;
 }
 
