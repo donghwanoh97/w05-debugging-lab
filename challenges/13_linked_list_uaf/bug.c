@@ -79,9 +79,10 @@ static Job *filter_jobs(Job *head, int threshold, Audit *audit) {
 
     while (cur != NULL) {
         if (cur->priority < threshold) {
+            Job *nx = cur->next;
             audit_add(audit, cur->id);   
             job_release(cur);            
-            cur = cur->next;             
+            cur = nx;             
         } else {
             Job *nx = cur->next;
             cur->next = NULL;
