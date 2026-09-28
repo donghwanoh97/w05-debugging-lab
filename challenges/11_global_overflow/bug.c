@@ -53,16 +53,16 @@ static size_t arena_off = 0;
 static void *arena_alloc(size_t n) {
     void *p = &arena[arena_off];
     arena_off += n;
-    // fprintf(stderr, "alloc n=%zu off=%zu cap=%zu\n", n, arena_off, sizeof(arena));
+    fprintf(stderr, "alloc n=%zu off=%zu cap=%zu\n", n, arena_off, sizeof(arena));
     return p;
 }
 
 static char *intern(const char *s) {
     size_t n = strlen(s) + 1;
 
-    if (arena_off + n > ARENA_SIZE) {
-        return NULL;
-    }
+    // if (arena_off + n > ARENA_SIZE) {
+    //     return NULL;
+    // }
     
     char *dst = arena_alloc(n);
 
