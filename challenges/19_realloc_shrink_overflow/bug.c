@@ -55,16 +55,22 @@ static void signal_init(Signal *s, size_t n) {
 
 static void signal_trim(Signal *s, size_t keep) {
     if (keep > s->cap) return;
+
+    double *old_ptr = s->samples;
+
     double *p = realloc(s->samples, keep * sizeof(double));
     if (p) s->samples = p;
     s->cap = keep;     
-    s->len = keep;            
+    s->len = keep;      
+    
+    // double mmap_test = old_ptr[1000]; 
+    // printf("값이 읽혔습니다?: %lf\n", mmap_test);
 }
 
 static double signal_energy(const Signal *s) {
     double e = 0.0;
     for (size_t i = 0; i < s->len; i++) {   
-        // printf("sample[%zu]: %lf\n", i, s->samples[i]);
+        printf("sample[%zu]: %lf\n", i, s->samples[i]);
         e += s->samples[i] * s->samples[i];
     }
     return e;
