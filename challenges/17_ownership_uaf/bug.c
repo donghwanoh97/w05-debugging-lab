@@ -89,12 +89,12 @@ static void deliver(Broker *b, Subscriber sub) {
 
 static void on_message(Msg *m) {
     printf("recv #%d: %s\n", m->id, m->body);
-    msg_free(m);                         
 }
 
 static void broker_shutdown(Broker *b) {
     for (int i = 0; i < b->log_n; i++) {
-        msg_free(b->log[i]);             
+        msg_free(b->log[i]);    
+        b->log[i] = NULL;         
     }
     b->log_n = 0;
 }
