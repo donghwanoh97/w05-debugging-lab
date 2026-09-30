@@ -73,18 +73,23 @@ static long hist_total(const Histogram *h) {
 int main(void) {
     Histogram h = { .data = NULL, .len = 0, .cap = 0 };
 
-    for (int k = 0; k < 200000; k++) hist_add(&h, k);
+    for (int k = 0; k < 200; k++) hist_add(&h, k);
 
-    size_t hot_idx = 100000;
-    h.data[hot_idx].count = 1;
+    // size_t hot_idx = 100;
+    // h.data[hot_idx].count = 1;
+    Bucket* hot = &h.data[100];
+    hot->count = 1;
     
     // printf("before - hot: %p, address: %p\n",hot, &h.data[100000]);
-    for (int k = 200000; k < 600000; k++) hist_add(&h, k);
+    for (int k = 200; k < 600; k++) hist_add(&h, k);
     // printf("after - hot: %p, address: %p\n",hot, &h.data[100000]);
 
-    h.data[hot_idx].count += 1000;
+    // h.data[hot_idx].count += 1000;
+    hot->count += 1000;
 
-    printf("hot=%ld total=%ld len=%zu\n", h.data[hot_idx].count, hist_total(&h), h.len);
+    // printf("hot=%ld total=%ld len=%zu\n", h.data[hot_idx].count, hist_total(&h), h.len);
+    printf("hot=%ld total=%ld len=%zu\n", hot->count, hist_total(&h), h.len);
+
     free(h.data);
     return 0;
 }
